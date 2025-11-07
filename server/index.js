@@ -1,11 +1,17 @@
 import { openai, supabase } from './config.js'
 
-
 async function main() {
-    await createEmbedding("A purple Elephant")
+    const testQuery = "A purple Elephant."
+    const embedding = await createEmbedding(testQuery)
+    await storeEmbedding(testQuery, embedding)
+
+    console.log(embedding)
+    console.log("Embedding stored!")
 }
+
 main()
 
+// ===========================
 
 async function createEmbedding(input) {
     const embedding = await openai.embeddings.create({
@@ -13,6 +19,14 @@ async function createEmbedding(input) {
         input: input,
         encoding_format: "float",
     });
-    console.log(embedding)
-    console.log(embedding.data[0].embedding)
+    // console.log(embedding.data[0].embedding)   
+    return embedding.data[0].embedding
+}
+
+async function storeEmbedding(originalText, embeddingText) {
+    const dataObj = {
+        content: originalText,
+        embedding: embeddingText
+    }
+    await supabase.from('documents').insert(dataObj)
 }
