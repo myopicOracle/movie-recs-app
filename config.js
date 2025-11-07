@@ -6,6 +6,6 @@ export const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
 
-const supabaseUrl = 'https://ynaholibienybgjtnzcu.supabase.co'
+const supabaseUrl = process.env.SUPABASE_URL
 const supabaseKey = process.env.SUPABASE_API_KEY
 export const supabase = createClient(supabaseUrl, supabaseKey)
