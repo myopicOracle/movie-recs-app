@@ -1,32 +1,42 @@
 import { openai, supabase } from './config.js'
-
-async function main() {
-    const testQuery = "A purple Elephant."
-    const embedding = await createEmbedding(testQuery)
-    await storeEmbedding(testQuery, embedding)
-
-    console.log(embedding)
-    console.log("Embedding stored!")
-}
-
-main()
+import movies from './movies.js'
 
 // ===========================
+main()
 
-async function createEmbedding(input) {
-    const embedding = await openai.embeddings.create({
-        model: "text-embedding-3-small",
-        input: input,
-        encoding_format: "float",
-    });
-    // console.log(embedding.data[0].embedding)   
-    return embedding.data[0].embedding
+async function main() {
+    await createAndStoreEmbedding(movies)    
 }
 
-async function storeEmbedding(originalText, embeddingText) {
-    const dataObj = {
-        content: originalText,
-        embedding: embeddingText
+async function createAndStoreEmbedding(inputArray) {
+    
+    const data = await Promise.all(
+
+        inputArray.map( async (item) => {
+
+            const embedding = await openai.embeddings.create({
+            model: "text-embedding-3-small",
+            input: item.content,
+            encoding_format: "float",
+            });
+
+            return {
+                // title: item.title,
+                // release_year: item.release_year,
+                // content: item.content,
+                ...item, // replace with spread operator
+                embedding: embedding.data[0].embedding
+            }
+
+        })
+    )
+    // console.log(data)
+
+    try {
+        const { error } =  await supabase.from('documents').insert(data)
+        if (error) throw error
+        console.log("Embedding stored!")
+    } catch (error) {
+        console.error("Insert failed:", error)
     }
-    await supabase.from('documents').insert(dataObj)
 }

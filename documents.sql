@@ -2,7 +2,7 @@
 create table documents (
   id serial primary key,
   title text not null,
-  releaseYear text not null,
+  release_year text not null,
   content text not null,
   embedding extensions.vector(1536)
 );
@@ -16,7 +16,7 @@ create or replace function match_documents (
 returns table (
   id bigint,
   title text,
-  releaseYear text,
+  release_year text,
   content text,
   similarity float
 )
@@ -25,7 +25,7 @@ as $$
   select
     documents.id,
     documents.title,
-    documents.releaseYear,
+    documents.release_year,
     documents.content,
     1 - (documents.embedding <=> query_embedding) as similarity
   from documents
