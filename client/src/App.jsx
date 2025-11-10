@@ -5,7 +5,7 @@ function App() {
 
   return (
     <>
-      <h1>My React App</h1>
+      <h1>Movie Recs App</h1>
       <div className="card">
 
       </div>
