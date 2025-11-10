@@ -1,7 +1,19 @@
-import { openai, supabase } from './config.js'
-import movies from './movies.js'
+import { openai, supabase } from '../config.js'
+import movies from '../movies.js'
 
-export const createAndStoreEmbedding = async (inputArray) => {
+
+export const createEmbedding = async (input) => {
+    const embedding = await openai.embeddings.create({
+        model: "text-embedding-3-small",
+        input,
+        encoding_format: "float",
+    })
+
+    return embedding.data[0].embedding
+}
+
+
+export const createAndStoreMovies = async (inputArray) => {
     
     const data = await Promise.all(
 
