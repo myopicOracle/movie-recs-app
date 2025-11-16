@@ -1,10 +1,10 @@
 export default function Chat() {
     return (
         <div className="chat-container">
-            <textArea className="assistant-response">
+            <div className="assistant-response">
 
-            </textArea>
-            <input className="user-message" />
+            </div>
+            <input className="user-message" placeholder="What are you in the mood for? " />
         </div>
     )
 }
