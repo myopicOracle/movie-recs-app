@@ -1,15 +1,28 @@
+import cors from 'cors'
+import express from 'express'
 import { openai, supabase } from './config.js'
 import { createEmbedding } from './services/embeddingService.js'
 
+const app = express()
+const PORT = 3000;
+app.use(cors())
+app.use(express.json())
 
-async function main() {
-    const userQuery = 'I want to watch an action movie.'
-    const matchedResult = await semanticSearch(userQuery)
-    const assistantResponse = await conversationalResponse(matchedResult, userQuery)
-    console.log(assistantResponse)
-}
-main()
+const chatMessages = [{
+  role: 'system',
+  content: 'You are a helpful assistant who enjoys recommending movies to users. You will be given two pieces of information - some context about the movie and a question. Your task is to formulate an answer to the question based on the provided context. Use a friendly and conversational tone.'
+}]
 
+app.post('/chat', async (request, response) => {
+  try {
+      const { message } = request.body
+      const matchedResult = await semanticSearch(message)
+      const assistantResponse = await conversationalResponse(matchedResult, message)
+      response.json({response: assistantResponse})
+  } catch (error) {
+    response.status(500).json({ error: error.message })
+  }
+})
 
 async function semanticSearch(input) {
     const embedding = await createEmbedding(input)
@@ -28,11 +41,6 @@ async function semanticSearch(input) {
 
     return data[0].content
 }
-
-const chatMessages = [{
-  role: 'system',
-  content: 'You are a helpful assistant who enjoys recommending movies to users. You will be given two pieces of information - some context about the movie and a question. Your task is to formulate an answer to the question based on the provided context. Use a friendly and conversational tone.'
-}]
 
 async function conversationalResponse(context, question) {
   chatMessages.push({
@@ -57,3 +65,5 @@ async function conversationalResponse(context, question) {
 
   return response.choices[0].message.content
 }
+
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`))
