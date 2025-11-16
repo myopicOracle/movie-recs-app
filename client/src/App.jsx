@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import './App.css'
+import Header from './components/Header.jsx'
+import Content from './components/Content.jsx'
 import Footer from './components/Footer.jsx'
 
 function App() {
 
   return (
     <>
-      <h1>Movie Recs App</h1>
-      <div className="card">
-
-      </div>
+      <Header />
+      <Content />
       <Footer />
     </>
   )
