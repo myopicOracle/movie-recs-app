@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './App.css'
+import Footer from './components/Footer.jsx'
 
 function App() {
 
@@ -9,11 +10,7 @@ function App() {
       <div className="card">
 
       </div>
-      <p className="read-the-docs">
-        <a href="https://github.com/myopicOracle" target="_blank" rel="noopener noreferrer">
-          @myopicOracle
-        </a>
-      </p>
+      <Footer />
     </>
   )
 }
