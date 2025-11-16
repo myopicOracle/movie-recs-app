@@ -1,8 +1,11 @@
+import Chat from "./Chat.jsx"
+
 export default function Content() {
 
     return (
         <>      
-            <h1>Movie Recs App</h1>
+            <h3>Query Our Database</h3>
+            <Chat />
         </>
     )
 }
