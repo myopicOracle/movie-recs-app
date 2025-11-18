@@ -1,5 +1,5 @@
 {
-	"name": "movie-recs-worker",
+	"name": "movie-recs-app",
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
@@ -7,6 +7,10 @@
 		"dev": "wrangler dev",
 		"start": "wrangler dev",
 		"test": "vitest"
+	},
+	"dependencies": {
+		"@supabase/supabase-js": "^2.81.1",
+		"openai": "^6.9.1"
 	},
 	"devDependencies": {
 		"@cloudflare/vitest-pool-workers": "^0.8.19",

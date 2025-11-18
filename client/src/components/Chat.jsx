@@ -4,10 +4,13 @@ export default function Chat() {
     const [messages, setMessages] = useState([])
     const [input, setInput] = useState('')
 
+    const ENDPOINT = 'http://localhost:3000/chat' 
+    // const ENDPOINT = 'http://localhost:3000/chat' // for local Node server
+
     async function handleSubmit() {
         if (!input.trim()) return
 
-        const response = await fetch('http://localhost:3000/chat', {
+        const response = await fetch(ENDPOINT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message: input })
