@@ -21,12 +21,23 @@ export default {
       })
     }
 
+    if (url.pathname === '/' && request.method === 'GET') {
+      return new Response('You\'ve found my Movie Recommendations API! Nothing to see here - POST requests go to the /chat endpoint', {
+        headers: { 'Content-Type': 'text/plain' }
+      })
+    }
+
     if (url.pathname === '/chat' && request.method === 'POST') {
       try {
 
         const { message } = await request.json()
+        console.log('Received message:', message)
+
         const matchedResult = await semanticSearch(message, env)
+        console.log('Semantic search result:', matchedResult)
+
         const assistantResponse = await conversationalResponse(matchedResult, message, env)
+        console.log('Assistant response:', assistantResponse)
         
         return new Response(JSON.stringify({ response: assistantResponse }), {
           headers: {
@@ -35,7 +46,10 @@ export default {
           },
         })
       } catch (error) {
-        return new Response(JSON.stringify({ error: error.message }), {
+        return new Response(JSON.stringify({ 
+          error: error.message,
+          stack: error.stack
+         }), {
           status: 500,
           headers: {
             'Content-Type': 'application/json',
