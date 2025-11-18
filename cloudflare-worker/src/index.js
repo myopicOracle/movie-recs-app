@@ -1,7 +1,7 @@
 import { openai, supabase } from './config.js'
 import { createEmbedding } from './services/embeddingService.js'
 
-const chatMessages = [{
+const systemMessage = [{
   role: 'system',
   content: 'You are a helpful assistant who enjoys recommending movies to users. You will be given two pieces of information - some context about the movie and a question. Your task is to formulate an answer to the question based on the provided context. Use a friendly and conversational tone.'
 }]
@@ -10,7 +10,7 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url)
     
-    // Handle CORS preflight
+    // CORS
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         headers: {
@@ -24,9 +24,9 @@ export default {
     if (url.pathname === '/chat' && request.method === 'POST') {
       try {
 
-        const { message } = request.body
-        const matchedResult = await semanticSearch(message)
-        const assistantResponse = await conversationalResponse(matchedResult, message)
+        const { message } = await request.json()
+        const matchedResult = await semanticSearch(message, env)
+        const assistantResponse = await conversationalResponse(matchedResult, message, env)
         
         return new Response(JSON.stringify({ response: assistantResponse }), {
           headers: {
@@ -49,12 +49,12 @@ export default {
   },
 }
 
-async function semanticSearch(input) {
-    const embedding = await createEmbedding(input)
+async function semanticSearch(input, env) {
+    const embedding = await createEmbedding(input, env)
     console.log('Embedding successfully returned. Embedding: ', embedding)
 
     // https://supabase.com/docs/guides/ai/vector-columns
-    const { data, error } = await supabase.rpc('match_documents', {
+    const { data, error } = await supabase(env).rpc('match_documents', {
       query_embedding: embedding, // Pass the embedding you want to compare
       match_threshold: 0.1, // Choose an appropriate threshold for your data
       match_count: 1, // Choose the number of matches
@@ -67,14 +67,16 @@ async function semanticSearch(input) {
     return data[0].content
 }
 
-async function conversationalResponse(context, question) {
-  chatMessages.push({
+async function conversationalResponse(context, question, env) {
+  const chatMessages = [
+  systemMessage, 
+  {
     role: 'user',
     content: `Context: ${context} --- Question: ${question}`
-  })
+  }]
   // console.log('Appended user query to chat history: ', chatMessages)
 
-  const response = await openai.chat.completions.create({
+  const response = await openai(env).chat.completions.create({
     model: 'gpt-4.1-nano',
     messages: chatMessages,
     temperature: 0.5,
@@ -82,13 +84,5 @@ async function conversationalResponse(context, question) {
   })
   // console.log('Response object: ', response)
 
-  chatMessages.push({
-    role: 'assistant',
-    content: response.choices[0].message.content
-  })
-  // console.log('Appended assistant response to chat history: ', chatMessages)
-
   return response.choices[0].message.content
 }
-
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`))
