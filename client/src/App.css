@@ -1,5 +1,10 @@
 #root {
   max-width: 1280px;
+  height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -37,6 +42,42 @@
   padding: 2em;
 }
 
-.read-the-docs {
+.footer-signature {
   color: #888;
+  font-size: 0.7rem;
+}
+
+nav {
+  display: flex;
+  justify-content: start;
+}
+
+.chat-container {
+  display: flex;
+  flex-flow: column;
+  height: 50vh;
+}
+
+.user-message {
+  height: 20%;
+  background-color: #282C34;
+  color: #ABB2BF;
+  border: 1px solid #3D434F;
+  border-radius: 0 0 4px 4px;
+  outline: none;
+  padding: 1rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  resize: none;
+}
+
+.assistant-response {
+  height: 80%;
+  background-color: #22252A;
+  color: #ABB2BF;
+  border: 1px solid #3D434F;
+  border-radius: 4px 4px 0 0;
+  padding: 1rem;
+  font-size: 0.9rem;
+  font-family: inherit;
 }

@@ -1,19 +1,16 @@
 import { useState } from 'react'
 import './App.css'
+import Header from './components/Header.jsx'
+import Content from './components/Content.jsx'
+import Footer from './components/Footer.jsx'
 
 function App() {
 
   return (
     <>
-      <h1>Movie Recs App</h1>
-      <div className="card">
-
-      </div>
-      <p className="read-the-docs">
-        <a href="https://github.com/myopicOracle" target="_blank" rel="noopener noreferrer">
-          @myopicOracle
-        </a>
-      </p>
+      <Header />
+      <Content />
+      <Footer />
     </>
   )
 }
