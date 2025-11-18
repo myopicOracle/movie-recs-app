@@ -2,8 +2,8 @@ import { openai, supabase } from '../config.js'
 import movies from '../data/movies.js'
 
 
-export const createEmbedding = async (input) => {
-    const embedding = await openai.embeddings.create({
+export const createEmbedding = async (input, env) => {
+    const embedding = await openai(env).embeddings.create({
         model: "text-embedding-3-small",
         input,
         encoding_format: "float",
@@ -13,13 +13,13 @@ export const createEmbedding = async (input) => {
 }
 
 
-export const createAndStoreMovies = async (inputArray) => {
+export const createAndStoreMovies = async (inputArray, env) => {
     
     const data = await Promise.all(
 
         inputArray.map( async (item) => {
 
-            const embedding = await openai.embeddings.create({
+            const embedding = await openai(env).embeddings.create({
             model: "text-embedding-3-small",
             input: item.content,
             encoding_format: "float",
