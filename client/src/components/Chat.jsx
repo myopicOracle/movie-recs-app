@@ -4,7 +4,7 @@ export default function Chat() {
     const [messages, setMessages] = useState([])
     const [input, setInput] = useState('')
 
-    const ENDPOINT = 'http://localhost:3000/chat' 
+    const ENDPOINT = 'https://movie-recs-app.myopic-oracle.workers.dev/chat' // for Cloudflare Worker 
     // const ENDPOINT = 'http://localhost:3000/chat' // for local Node server
 
     async function handleSubmit() {
