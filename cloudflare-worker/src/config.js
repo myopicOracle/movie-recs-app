@@ -1,4 +1,4 @@
-import OpenAI from "openai/index.js";
+import OpenAI from "openai";
 import { createClient } from '@supabase/supabase-js'
 
 export const openai = (env) => {

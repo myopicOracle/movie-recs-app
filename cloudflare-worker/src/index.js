@@ -1,10 +1,10 @@
 import { openai, supabase } from './config.js'
 import { createEmbedding } from './services/embeddingService.js'
 
-const systemMessage = [{
+const systemMessage = {
   role: 'system',
   content: 'You are a helpful assistant who enjoys recommending movies to users. You will be given two pieces of information - some context about the movie and a question. Your task is to formulate an answer to the question based on the provided context. Use a friendly and conversational tone.'
-}]
+}
 
 export default {
   async fetch(request, env, ctx) {
