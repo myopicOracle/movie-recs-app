@@ -1,28 +1,53 @@
-import cors from 'cors'
-import express from 'express'
 import { openai, supabase } from './config.js'
 import { createEmbedding } from './services/embeddingService.js'
-
-const app = express()
-const PORT = 3000;
-app.use(cors())
-app.use(express.json())
 
 const chatMessages = [{
   role: 'system',
   content: 'You are a helpful assistant who enjoys recommending movies to users. You will be given two pieces of information - some context about the movie and a question. Your task is to formulate an answer to the question based on the provided context. Use a friendly and conversational tone.'
 }]
 
-app.post('/chat', async (request, response) => {
-  try {
-      const { message } = request.body
-      const matchedResult = await semanticSearch(message)
-      const assistantResponse = await conversationalResponse(matchedResult, message)
-      response.json({response: assistantResponse})
-  } catch (error) {
-    response.status(500).json({ error: error.message })
-  }
-})
+export default {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url)
+    
+    // Handle CORS preflight
+    if (request.method === 'OPTIONS') {
+      return new Response(null, {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+        },
+      })
+    }
+
+    if (url.pathname === '/chat' && request.method === 'POST') {
+      try {
+
+        const { message } = request.body
+        const matchedResult = await semanticSearch(message)
+        const assistantResponse = await conversationalResponse(matchedResult, message)
+        
+        return new Response(JSON.stringify({ response: assistantResponse }), {
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        })
+      } catch (error) {
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 500,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        })
+      }
+    }
+
+    return new Response('Not Found', { status: 404 })
+  },
+}
 
 async function semanticSearch(input) {
     const embedding = await createEmbedding(input)
