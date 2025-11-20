@@ -11,8 +11,8 @@
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
+  height: 6rem;
+  padding-right: 1.8rem;
   will-change: filter;
   transition: filter 300ms;
 }
@@ -47,9 +47,9 @@
   font-size: 0.7rem;
 }
 
-nav {
+.header {
   display: flex;
-  justify-content: start;
+  justify-content: center;
 }
 
 .content-wrapper {
@@ -62,12 +62,12 @@ nav {
 .chat-container {
   display: flex;
   flex-flow: column;
-  height: 50vh;
+  height: 55vh;
   width: 60vw;
 }
 
 .user-message {
-  height: 20%;
+  height: 10%;
   background-color: #282C34;
   border: 1px solid #3D434F;
   border-radius: 0 0 8px 8px;
@@ -80,7 +80,7 @@ nav {
 }
 
 .assistant-response {
-  height: 80%;
+  height: 90%;
   background-color: #22252A;
   text-align: left;
   border: 1px solid #3D434F;
@@ -97,4 +97,47 @@ nav {
   padding: 0.75rem 1.5rem;
   font-size: 0.9rem;
   font-family: inherit;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.2rem;
+  }
+  h3 {
+    font-size: 1.3rem;
+  }
+  .logo {
+    height: 5rem;
+  }
+  .chat-container {
+    height: 60vh;
+    width: 70vw;
+  }
+  .user-message,
+  .assistant-response {
+    padding: 0.6rem 1.25rem;
+    font-size: 0.8rem;
+  }
+
+}
+
+@media (max-width: 476px) {
+  h1 {
+    font-size: 1.6rem;
+  }
+  h3 {
+    font-size: 1.1rem;
+  }
+  .logo {
+    height: 4rem;
+  }
+  .chat-container {
+    height: 65vh;
+    width: 80vw;
+  }
+  .user-message,
+  .assistant-response {
+    padding: 0.5rem 1rem;
+    font-size: 0.7rem;
+  }
 }
