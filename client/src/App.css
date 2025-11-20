@@ -85,6 +85,7 @@ nav {
   text-align: left;
   border: 1px solid #3D434F;
   border-radius: 8px 8px 0 0;
+  overflow-y: auto;
 }
 
 .assistant-text {
