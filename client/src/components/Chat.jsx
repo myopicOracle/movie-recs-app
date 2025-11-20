@@ -33,8 +33,8 @@ export default function Chat() {
             <div className="assistant-response">
                 {messages.map((item, index) => (
                     <div key={index}>
-                        <p><strong>You: </strong> {item.user} </p>
-                        <p><strong>Chatbot: </strong> {item.assistant} </p>
+                        <p className="user-text"><strong>You: </strong> {item.user} </p>
+                        <p className="assistant-text"><strong>Chatbot: </strong> {item.assistant} </p>
                     </div>
                 ))}
             </div>
