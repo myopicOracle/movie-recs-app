@@ -1,40 +1,56 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef  } from 'react'
 
 export default function Chat() {
     const [messages, setMessages] = useState([])
     const [input, setInput] = useState('')
+    const messagesEndRef = useRef(null)
 
     const ENDPOINT = 'https://movie-recs-app.myopic-oracle.workers.dev/chat' // for Cloudflare Worker 
     // const ENDPOINT = 'http://localhost:3000/chat' // for local Node server
 
+    useEffect(() => {
+        if (messagesEndRef.current) {
+        messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight
+        }
+    }, [messages])
+
     async function handleSubmit() {
         if (!input.trim()) return
 
-        const response = await fetch(ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: input })
-        })
-        const data = await response.json()
+        const userMessage = input
+        setInput('')
 
         setMessages([
             ...messages,
             {
-                user: input,
-                assistant: data.response
+                user: userMessage,
+                assistant: 'Looking for a match...'
             }
         ])
 
-        setInput('')
+        const response = await fetch(ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userMessage })
+        })
+        const data = await response.json()
+
+        setMessages(prev => [
+            ...prev.slice(0, -1),
+            {
+                user: userMessage,
+                assistant: data.response
+            }
+        ])
     }
 
     return (
         <div className="chat-container">
-            <div className="assistant-response">
+            <div className="assistant-response" ref={messagesEndRef}>
                 {messages.map((item, index) => (
                     <div key={index}>
-                        <p><strong>You: </strong> {item.user} </p>
-                        <p><strong>Chatbot: </strong> {item.assistant} </p>
+                        <p className="user-text"><strong>You: </strong> {item.user} </p>
+                        <p className="assistant-text"><strong>Chatbot: </strong> {item.assistant} </p>
                     </div>
                 ))}
             </div>
