@@ -17,22 +17,31 @@ export default function Chat() {
     async function handleSubmit() {
         if (!input.trim()) return
 
-        const response = await fetch(ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: input })
-        })
-        const data = await response.json()
+        const userMessage = input
+        setInput('')
 
         setMessages([
             ...messages,
             {
-                user: input,
-                assistant: data.response
+                user: userMessage,
+                assistant: 'Looking for a match...'
             }
         ])
 
-        setInput('')
+        const response = await fetch(ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userMessage })
+        })
+        const data = await response.json()
+
+        setMessages(prev => [
+            ...prev.slice(0, -1),
+            {
+                user: userMessage,
+                assistant: data.response
+            }
+        ])
     }
 
     return (
